@@ -99,7 +99,7 @@ function update() {
     // Verifica colisões
     if (checkCollision()) {
         // Se houver colisão, reinicia o jogo
-        alert('Game Over! Score: ' + score);
+        alert('Game Over! Pontuação: ' + score);
         snake = [{ x: 100, y: 100 }];
         direction = { x: 0, y: 0 };
         score = 0;
