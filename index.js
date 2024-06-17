@@ -4,6 +4,10 @@ const gameArea = document.getElementById('gameArea');
 // Seleciona o elemento da pontuação
 const scoreDisplay = document.getElementById('score');
 
+// Seleciona o modal de instruções e o botão de iniciar
+const instructionsModal = document.getElementById('instructionsModal');
+const startButton = document.getElementById('startButton');
+
 // Define o tamanho de cada "tile" (quadrado) e o tamanho total da área do jogo
 const tileSize = 20;
 const areaSize = 400;
@@ -20,17 +24,26 @@ let food = { x: 200, y: 200 };
 // Inicializa a pontuação
 let score = 0;
 
+// Inicializa a pontuação mais alta a partir do localStorage
+let highScore = localStorage.getItem('highScore') || 0;
+const highScoreDisplay = document.createElement('p');
+highScoreDisplay.innerHTML = `Recorde: <span id="highScore">${highScore}</span>`;
+document.querySelector('.score-board').appendChild(highScoreDisplay);
+
 // Função para desenhar a cobra na tela
 function drawSnake() {
     // Limpa a área do jogo
     gameArea.innerHTML = '';
 
     // Para cada segmento da cobra, cria um elemento div e o adiciona na área do jogo
-    snake.forEach(segment => {
+    snake.forEach((segment, index) => {
         const snakeElement = document.createElement('div');
         snakeElement.style.left = segment.x + 'px';
         snakeElement.style.top = segment.y + 'px';
         snakeElement.classList.add('snake');
+        if (index === 0) {
+            snakeElement.style.transform = `scale(1.2)`;
+        }
         gameArea.appendChild(snakeElement);
     });
 }
@@ -100,6 +113,7 @@ function update() {
     if (checkCollision()) {
         // Se houver colisão, reinicia o jogo
         alert('Game Over! Pontuação: ' + score);
+        updateHighScore();
         snake = [{ x: 100, y: 100 }];
         direction = { x: 0, y: 0 };
         score = 0;
@@ -111,6 +125,26 @@ function update() {
     drawSnake();
     drawFood();
 }
+
+// Função para atualizar a pontuação mais alta
+function updateHighScore() {
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('highScore', highScore);
+        document.getElementById('highScore').textContent = highScore;
+    }
+}
+
+// Exibe o modal de instruções ao carregar a página
+window.onload = function() {
+    instructionsModal.style.display = 'flex';
+};
+
+// Inicia o jogo ao clicar no botão de iniciar
+startButton.addEventListener('click', function() {
+    instructionsModal.style.display = 'none';
+    setInterval(update, 100);
+});
 
 // Adiciona um evento de teclado para controlar a direção da cobra
 document.addEventListener('keydown', (event) => {
@@ -129,6 +163,3 @@ document.addEventListener('keydown', (event) => {
             break;
     }
 });
-
-// Define um intervalo para atualizar o jogo a cada 100ms
-setInterval(update, 100);
