@@ -1,6 +1,9 @@
 // Seleciona o elemento da área do jogo
 const gameArea = document.getElementById('gameArea');
 
+// Seleciona o elemento da pontuação
+const scoreDisplay = document.getElementById('score');
+
 // Define o tamanho de cada "tile" (quadrado) e o tamanho total da área do jogo
 const tileSize = 20;
 const areaSize = 400;
@@ -53,6 +56,8 @@ function moveSnake() {
     if (head.x === food.x && head.y === food.y) {
         // Aumenta a pontuação
         score++;
+        // Atualiza a exibição da pontuação
+        scoreDisplay.textContent = score;
         // Coloca a comida em uma nova posição
         placeFood();
     } else {
@@ -98,6 +103,7 @@ function update() {
         snake = [{ x: 100, y: 100 }];
         direction = { x: 0, y: 0 };
         score = 0;
+        scoreDisplay.textContent = score;
         placeFood();
     }
 
